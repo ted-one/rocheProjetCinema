@@ -1,0 +1,36 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/usr/share/nginx/html
+    restart: always
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mariadb
+      PMA_PORT: 3306
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+
+  mariadb:
+    image: mariadb:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "password"
+      MYSQL_DATABASE: "rocheCinema"
+      MYSQL_USER: "rocheCinema"
+      MYSQL_PASSWORD: "p4ssword"
+    volumes:
+      - ./tedv_cinema.sql:/docker-entrypoint-initdb.d/tedv_cinema.sql
+      - mariadb_data:/var/lib/mysql
+    restart: always
+
+volumes:
+  mariadb_data:
