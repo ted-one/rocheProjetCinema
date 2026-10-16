@@ -40,7 +40,13 @@ def home():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    sql_requette = "SELECT seance.id, heure_date, id_film, id_salle, film.titre, salle.numero_salle FROM seance JOIN film ON film.id = seance.id_film JOIN salle ON seance.id_salle = salle.id ORDER BY heure_date LIMIT 1 ;"
+    cursor.execute(sql_requette)
+    resultat = cursor.fetchone()
+
+    return render_template('index.html', resultat=resultat)
 
 
 if __name__ == '__main__':

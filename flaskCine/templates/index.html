@@ -50,7 +50,8 @@
             <div class="col-sm-4"><img src="{{ url_for('static', filename='assets/affiche-leemiller.png') }}" class="img-fluid img_affiche_hauteur_max" alt=""></div>
             <div class="col-sm-8">
                 <h3>Lee Miller</h3>
-                <p>Séance à 14h30 / Salle 1</p>
+                <p>{{ resultat.heure_date}}</p>
+                <p>{{ resultat.numero_salle}}</p>
                 <h4>Résumé du film</h4>
                 <p>L’incroyable vie de LEE MILLER, ex-modèle pour Vogue et muse de Man Ray devenue l’une des premières femmes photographes de guerre. Partie sur le front et prête à tout pour témoigner des horreurs de la Seconde Guerre, elle a, par son courage et son refus des conventions, changé la façon de voir le monde.</p>
             </div>
