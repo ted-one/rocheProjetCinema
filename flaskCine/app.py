@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, redirect, url_for
 import pymysql
 import pymysql.cursors
 from config import Config # Importe la configuration
@@ -40,14 +40,41 @@ def home():
 
 @app.route('/')
 def index():
-    connection = get_db_connection()
-    cursor = connection.cursor()
-    sql_requette = "SELECT seance.id, heure_date, id_film, id_salle, film.titre, salle.numero_salle FROM seance JOIN film ON film.id = seance.id_film JOIN salle ON seance.id_salle = salle.id ORDER BY heure_date LIMIT 1 ;"
-    cursor.execute(sql_requette)
-    resultat = cursor.fetchone()
 
-    return render_template('index.html', resultat=resultat)
+    co = get_db_connection()
+    cursor = co.cursor()
 
+    sql_requete = "SELECT seance.id, heure_date, id_film, id_salle, film.titre, salle.numero_salle, film.resume, film.interdit_16_ans FROM seance JOIN film ON film.ID = seance.id_film JOIN salle ON seance.id_salle = salle.ID ORDER BY heure_date LIMIT 3;"
+    cursor.execute(sql_requete)
+
+    prochaines_seances = cursor.fetchall()
+
+    return render_template('index.html', prochaines_seances=prochaines_seances)
+
+@app.route('/seances')
+def seances():
+    return render_template('seances.html')
+
+@app.route('/film/')
+def film_sans_id():
+    return redirect(url_for('index'))
+
+@app.route('/film/<int:id_film>')
+def film(id_film):
+    print(id_film)
+    co = get_db_connection()
+    cursor = co.cursor()
+    infos_film_requete = "SELECT * FROM film WHERE id=%s"
+    cursor.execute(infos_film_requete, id_film)
+    film = cursor.fetchone()
+
+    infos_seance_requette = "SELECT * FROM seance WHERE id=%s"
+    cursor.execute(infos_seance_requette, id_film)
+    seance = cursor.fetchone()
+
+
+    print(film)
+    return render_template('film.html', film=film, seance=seance)
 
 if __name__ == '__main__':
     app.run(debug=True)
