@@ -51,13 +51,36 @@ def index():
 
     return render_template('index.html', prochaines_seances=prochaines_seances)
 
-@app.route('/seances')
+@app.route('/seance/<int:id_salle>')
+def seance(id_salle):
+    print(id_salle)
+    co = get_db_connection()
+    cursor = co.cursor()
+    requete_seances = "SELECT film.titre, seance.heure_date, seance.version_langue, film.interdit_16_ans FROM seance JOIN film ON film.id = seance.id_film JOIN salle ON seance.id_salle = salle.id WHERE salle.numero_salle = %s AND seance.heure_date >= NOW() ORDER BY seance.heure_date ASC;"
+    cursor.execute(requete_seances, id_salle)
+    seances = cursor.fetchall()
+    print(seances)
+    return render_template('seance.html', seances=seances, numero_salle=id_salle)
+
+
+@app.route('/seance/')
+def seance_sans_id():
+    return redirect(url_for('index'))
+
+@app.route('/seances/')
 def seances():
     return render_template('seances.html')
 
-@app.route('/film/')
-def film_sans_id():
-    return redirect(url_for('index'))
+@app.route('/getseances/<int:id_salle>')
+def getseances(id_salle):
+    print(id_salle)
+    co = get_db_connection()
+    cursor = co.cursor()
+    requete_seances = "SELECT film.titre, seance.heure_date, seance.version_langue, film.interdit_16_ans FROM seance JOIN film ON film.id = seance.id_film JOIN salle ON seance.id_salle = salle.id WHERE salle.numero_salle = %s AND seance.heure_date >= NOW() ORDER BY seance.heure_date ASC;"
+    cursor.execute(requete_seances, id_salle)
+    seances = cursor.fetchall()
+    print(seances)
+    return seances
 
 @app.route('/film/<int:id_film>')
 def film(id_film):
@@ -71,10 +94,13 @@ def film(id_film):
     infos_seance_requette = "SELECT * FROM seance WHERE id=%s"
     cursor.execute(infos_seance_requette, id_film)
     seance = cursor.fetchone()
-
-
     print(film)
     return render_template('film.html', film=film, seance=seance)
+
+@app.route('/film/')
+def film_sans_id():
+    return redirect(url_for('index'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
