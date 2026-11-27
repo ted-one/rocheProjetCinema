@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, redirect, url_for
+from flask import Flask, jsonify, render_template, redirect, url_for, request
 import pymysql
 import pymysql.cursors
 from config import Config # Importe la configuration
@@ -40,16 +40,20 @@ def home():
 
 @app.route('/')
 def index():
-
     co = get_db_connection()
     cursor = co.cursor()
-
-    sql_requete = "SELECT seance.id, heure_date, id_film, id_salle, film.titre, salle.numero_salle, film.resume, film.interdit_16_ans FROM seance JOIN film ON film.ID = seance.id_film JOIN salle ON seance.id_salle = salle.ID ORDER BY heure_date LIMIT 3;"
+    sql_requete = "SELECT seance.id, heure_date, id_film, id_salle, film.titre, salle.numero_salle, film.resume, film.interdit_16_ans, film.affiche FROM seance JOIN film ON film.ID = seance.id_film JOIN salle ON seance.id_salle = salle.ID ORDER BY heure_date LIMIT 3;"
     cursor.execute(sql_requete)
-
     prochaines_seances = cursor.fetchall()
 
-    return render_template('index.html', prochaines_seances=prochaines_seances)
+    print(prochaines_seances)
+
+    sql = "SELECT * FROM film;"
+    cursor.execute(sql)
+    films = cursor.fetchall()
+    cursor.close()
+    co.close()
+    return render_template('index.html', prochaines_seances=prochaines_seances, films=films)
 
 @app.route('/seance/<int:id_salle>')
 def seance(id_salle):
@@ -60,7 +64,11 @@ def seance(id_salle):
     cursor.execute(requete_seances, id_salle)
     seances = cursor.fetchall()
     print(seances)
-    return render_template('seance.html', seances=seances, numero_salle=id_salle)
+
+    sql = "SELECT * FROM film;"
+    cursor.execute(sql)
+    films = cursor.fetchall()
+    return render_template('seance.html', seances=seances, numero_salle=id_salle, films=films)
 
 
 @app.route('/seance/')
@@ -69,7 +77,17 @@ def seance_sans_id():
 
 @app.route('/seances/')
 def seances():
-    return render_template('seances.html')
+    co = get_db_connection()
+    cursor = co.cursor()
+    requete_film = "SELECT * FROM seance JOIN salle ON seance.id_salle=salle.id JOIN film ON seance.id_film=film.id ORDER BY seance.heure_date ASC;"
+    cursor.execute(requete_film)
+    info_seances_films = cursor.fetchall()
+    sql = "SELECT * FROM film;"
+    cursor.execute(sql)
+    films = cursor.fetchall()
+    cursor.close()
+    co.close()
+    return render_template('seances.html', info_seances_films=info_seances_films, films=films)
 
 @app.route('/getseances/<int:id_salle>')
 def getseances(id_salle):
@@ -95,11 +113,45 @@ def film(id_film):
     cursor.execute(infos_seance_requette, id_film)
     seance = cursor.fetchone()
     print(film)
-    return render_template('film.html', film=film, seance=seance)
+
+    sql = "SELECT * FROM film;"
+    cursor.execute(sql)
+    films = cursor.fetchall()
+    return render_template('film.html', film=film, seance=seance, films=films)
 
 @app.route('/film/')
 def film_sans_id():
     return redirect(url_for('index'))
+
+
+@app.route('/form')
+def form():
+    co = get_db_connection()
+    cursor = co.cursor()
+    cursor.execute("SELECT * FROM film;")
+    films = cursor.fetchall()
+    co.close()
+
+    return render_template('formulaire.html', films=films)
+
+
+@app.route('/ajouter_film', methods=['POST'])
+def ajouter_film():
+    titre = request.form.get('titre')
+    langue = request.form.get('langue')
+    duree = request.form.get('duree')
+    interdiction = bool(request.form.get('interdiction'))
+    resume = request.form.get('resume')
+    affiche = request.form.get('affiche')
+
+    co = get_db_connection()
+    cursor = co.cursor()
+
+    sql = "INSERT INTO film (titre, resume, duree, interdit_16_ans, langue, affiche) VALUES (%s, %s, %s, %s, %s, %s);"
+    cursor.execute(sql, (titre, resume, duree, interdiction, langue, affiche))
+    co.commit()
+
+    return render_template('succes_ajout.html', film=titre)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,47 @@
+{% extends "base_admin.html" %}
+{% block contenu %}
+<div class="container my-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <h2>Ajouter un film</h2>
+
+            <form action="/ajouter_film" method="POST" class="mt-4">
+                <div class="mb-3">
+                    <label for="titre" class="form-label">Titre du film</label>
+                    <input type="text" class="form-control" id="titre" name="titre" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="duree" class="form-label">Durée (en minutes)</label>
+                    <input type="number" class="form-control" id="duree" name="duree" min="1" step="1" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="langue" class="form-label">Langue</label>
+                    <select class="form-select" id="langue" name="langue">
+                        <option value="VF">FR (Français)</option>
+                        <option value="VO">EN (Anglais)</option>
+                    </select>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="interdiction" name="interdiction" value="Oui">
+                    <label class="form-check-label" for="interdiction">Interdit aux moins de 16 ans</label>
+                </div>
+
+                <div class="mb-3">
+                    <label for="resume" class="form-label">Résumé du film</label>
+                    <textarea class="form-control" id="resume" name="resume" rows="4" required></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="affiche" class="form-label">Nom du fichier de l'affiche</label>
+                    <input type="text" class="form-control" id="affiche" name="affiche" placeholder="ex: affiche-film.jpg" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Enregistrer le film</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

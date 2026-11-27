@@ -1,68 +1,26 @@
-<!DOCTYPE html>
-<html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Film | {{ film.titre }}</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    </head>
-    <body>
-        <header class="header">
-            <img src="{{ url_for('static', filename='assets/banner.png') }}" class="img-fluid img_banner" alt="">
-        </header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container-fluid">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="menu">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item ">
-                            <a class="nav-link " href="/" role="button" >Accueil</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link " href="/films" role="button">Films</a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link " href="/seances" role="button" >Seances</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-
-
-
-        <div class="container">
-            <div class="row"><div class="col-12"><h1>{{ film.titre }}</h1></div></div>
-            <div class="row"><div class="col-12"><p>Séance du 21 octobre au 27 octobre</p></div>
-            </div>
-
-            <div class="row">
-                <div class="col-9">
-                    <h2>Résumé</h2>
-                    <p>{{ film.resume }}</p>
-                    <h2>Séances</h2>
-                    <ul>
-                        <li>{{ seance.heure_date }}, salles, {{ seance.version_langue }}, <p>{% if film.interdit_16_ans %}<img src="{{ url_for('static', filename="assets/interdiction-moins-de-16-ans.png") }}" style="height: 75px;">{% endif %}</p></li>
-                    </ul>
-                </div>
-                <div class="col-3"><img src="{{ url_for('static', filename="assets/" ~ film.affiche) }}" class="img-fluid" alt=""></div>
-            </div>
+{% extends "base.html" %}
+{% block contenu %}
+    <div class="container">
+        <div class="row"><div class="col-12"><h1>{{ film.titre }}</h1></div></div>
+        <div class="row"><div class="col-12"><p>Séance du 21 octobre au 27 octobre</p></div>
         </div>
 
-        <div class="container">
-            <div class="row">
-                <div class="row"><div class="col-12"><a href="/seances" class="btn btn-primary">Voir toutes les séances</a></div></div>
+        <div class="row">
+            <div class="col-9">
+                <h2>Résumé</h2>
+                <p>{{ film.resume }}</p>
+                <h2>Séances</h2>
+                <ul>
+                    <li>{{ seance.heure_date }}, salles, {{ seance.version_langue }}, <p>{% if film.interdit_16_ans %}<img src="{{ url_for('static', filename="assets/interdiction-moins-de-16-ans.png") }}" style="height: 75px;">{% endif %}</p></li>
+                </ul>
             </div>
+            <div class="col-3"><img src="{{ url_for('static', filename="assets/" ~ film.affiche) }}" class="img-fluid affiche-film" alt=""></div>
         </div>
+    </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-        <footer class="footer">
-            <p>Simone de Beauvoir Gragnague BTS 2026 | Teddy ROCHE</p>
-        </footer>
-    </body>
-</html>
+    <div class="container">
+        <div class="row">
+            <div class="row"><div class="col-12"><a href="/seances" class="btn btn-primary">Voir toutes les séances</a></div></div>
+        </div>
+    </div>
+{% endblock %}

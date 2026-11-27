@@ -1,38 +1,5 @@
-<!DOCTYPE html>
-<html lang="fr" xmlns="http://www.w3.org/1999/html">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Index</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <header class="header">
-        <img src="{{ url_for('static', filename='assets/banner.png') }}" class="img-fluid img_banner" alt="">
-    </header>
-       <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <div class="container-fluid">
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div class="collapse navbar-collapse" id="menu">
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item ">
-                                <a class="nav-link " href="/" role="button" >Accueil</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link " href="/films" role="button">Films</a>
-                            </li>
-                            <li class="nav-item ">
-                                <a class="nav-link " href="/seances" role="button" >Seances</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-
+{% extends "base.html" %}
+{% block contenu %}
     <div class="container">
         <div class="row">
             <div class="col-12"><h2>Cinéma multiplexe du Castor</h2></div>
@@ -41,13 +8,13 @@
             <div class="col-12"><h2>Prochaine Séance</h2></div>
         </div>
         <div class="row">
-            <div class="col-sm-4"><img src="{{ url_for('static', filename='assets/affiche-leemiller.png') }}" class="img-fluid img_affiche_hauteur_max" alt=""></div>
+            <div class="col-sm-4"><img src="{{ url_for('static', filename='assets/' ~ prochaines_seances[0].affiche) }}" class="img-fluid affiche-film" alt="affiche-leemiller"></div>
             <div class="col-sm-8">
                 <h3>Lee Miller</h3>
                 <p>{{ prochaines_seances[0].heure_date}}</p>
                 <p>{{ prochaines_seances[0].numero_salle}}</p>
                 <h4>Résumé du film</h4>
-                <p>L’incroyable vie de LEE MILLER, ex-modèle pour Vogue et muse de Man Ray devenue l’une des premières femmes photographes de guerre. Partie sur le front et prête à tout pour témoigner des horreurs de la Seconde Guerre, elle a, par son courage et son refus des conventions, changé la façon de voir le monde.</p>
+                <p>{{ prochaines_seances[0].resume}}</p>
             </div>
         </div>
     </div>
@@ -57,29 +24,23 @@
             <div class="col-12"><h3>Dans les autres salles</h3></div>
         </div>
         <div class="row">
-            <div class="col-sm-1"><img src="{{ url_for('static', filename='assets/affiche-croquette.jpg') }}" class="img-fluid" alt=""></div>
+            <div class="col-sm-1"><img src="{{ url_for('static', filename='assets/' ~ prochaines_seances[1].affiche) }}" class="img-fluid affiche-film" alt=""></div>
             <div class="col-sm-5">
-                <h3>Croquette</h3>
+                <h3>{{ prochaines_seances[1].titre}}</h3>
                 <p>{{ prochaines_seances[1].heure_date}}</p>
-                <p>{{ prochaines_seances[1].numero_salle}}</p>
+                <p>Salle {{ prochaines_seances[1].numero_salle}}</p>
 
             </div>
-            <div class="col-sm-1"><img src="{{ url_for('static', filename='assets/affiche-smile.jpg') }}" class="img-fluid" alt=""></div>
+            <div class="col-sm-1"><img src="{{ url_for('static', filename='assets/' ~ prochaines_seances[2].affiche) }}" class="img-fluid affiche-film" alt=""></div>
 
             <div class="col-sm-5 justify-content-between align-items-center">
                 <div>
-                    <h3>Smile</h3>
+                    <h3>{{ prochaines_seances[2].titre}}</h3>
                     <p>{{ prochaines_seances[2].heure_date}}</p>
-                    <p>{{ prochaines_seances[2].numero_salle}}</p>
+                    <p>Salle {{ prochaines_seances[2].numero_salle}}</p>
                 </div>
-                <img src="{{ url_for('static', filename='assets/interdiction-moins-de-16-ans.png') }}" style="height:75px;" class="img-fluid" alt="">
             </div>
         </div>
         <div class="row"><div class="col-12"><a href="/seances" class="btn btn-primary">Voir toutes les séances</a></div></div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-    <footer class="footer">
-        <p>Simone de Beauvoir Gragnague BTS 2026 | Teddy ROCHE test</p>
-    </footer>
-</body>
-</html>
+{% endblock %}

@@ -1,69 +1,30 @@
-<!DOCTYPE html>
-<html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Séances</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    </head>
-    <body>
-        <header class="header">
-            <img src="{{ url_for('static', filename='assets/banner.png') }}" class="img-fluid img_banner" alt="">
-        </header>
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                    <div class="container-fluid">
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-
-                        <div class="collapse navbar-collapse" id="menu">
-                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                <li class="nav-item ">
-                                    <a class="nav-link " href="/" role="button" >Accueil</a>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link " href="/films" role="button">Films</a>
-                                </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link " href="/seances" role="button" >Seances</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
-
-
+{% extends "base.html" %}
+{% block contenu %}
         <div class="container">
             <div class="row">
                 <div class="col-12"><h1>Salle 1</h1></div>
             </div>
-            <div class="row">
-                <div class="col-12"><p>Séance du 21 octobre au 27 octobre</p></div>
-            </div>
-            <div class="row">
-                <div class="col-4"><a href="/film/1"><img src="{{ url_for('static', filename='assets/affiche-leemiller.png') }}" class="img-fluid" alt=""></a></div>
+            <div id="main" class="container-fluid">
+                <div class="container">
+                    <div class="row">
+                        {% for film in info_seances_films %}
+                            <div class="col-4">
+                                <div class="seance">
+                                    <a href="/film/{{ film.id_film }}">
+                                        <img src="{{ url_for('static', filename='assets/' ~ film.affiche) }}" class="img-fluid affiche-film" alt="affiche">
+                                    </a>
+                                    <div style="padding: 2%;">
+                                        <p>Salle {{ film.id_salle }}</p>
+                                        <p>{{ film.heure_date }}</p>
+                                        <p>{{ film.version_langue }}</p>
+                                    </div>
+                                </div>
 
-                <div class="col-4"><a href="/film/2"><img src="{{ url_for('static', filename='assets/affiche-croquette.jpg') }}" class="img-fluid" alt=""></a></div>
-
-                <div class="col-4"><a href="/film/3"><img src="{{ url_for('static', filename='assets/affiche-smile.jpg') }}" class="img-fluid" alt=""></a></div>
-            </div>
-            <div class="row">
-                <div class="col-4"><p>Mercredi 21 Octobre</p><p>19h30 VOST</p></div>
-                <div class="col-4"><p>Mercredi 21 Octobre</p><p>16h00 VF</p></div>
-                <div class="col-4"><p>Mercredi 21 Octobre</p><p>21h30 VF</p></div>
-            </div>
-            <div class="row">
-                <div class="col-4"><p>Jeudi 22 Octobre</p><p>20h00 VOST</p></div>
-                <div class="col-4"><p>Jeudi 22 Octobre</p><p>17h00 VF</p></div>
-                <div class="col-4"><p>Jeudi 22 Octobre</p><p>19h00 VF</p></div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
             <div class="row"><div class="col-12"><a href="/" class="btn btn-primary">Revenir à l'accueil</a></div></div>
         </div>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-        <footer class="footer">
-            <p>Simone de Beauvoir Gragnague BTS 2026 | Teddy ROCHE</p>
-        </footer>
-    </body>
-</html>
+{% endblock %}
